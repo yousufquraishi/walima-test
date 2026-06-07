@@ -296,15 +296,14 @@
         let bgWidth, bgHeight;
         let lastWidth = window.innerWidth;
 
-        // Creating 3 independent fluid orbs with custom colors for light/dark modes
+        // Increased velocities for faster, more noticeable motion
         const blobs = [
-            { x: 0, y: 0, vx: 0.3, vy: 0.4, r: 0, light: 'rgba(212, 175, 55, 0.45)', dark: 'rgba(40, 100, 255, 0.45)' },
-            { x: 0, y: 0, vx: -0.4, vy: 0.3, r: 0, light: 'rgba(158, 27, 34, 0.35)', dark: 'rgba(212, 175, 55, 0.25)' },
-            { x: 0, y: 0, vx: 0.2, vy: -0.5, r: 0, light: 'rgba(253, 251, 247, 0.5)', dark: 'rgba(20, 20, 40, 0.5)' }
+            { x: 0, y: 0, vx: 0.8, vy: 1.0, r: 0, light: 'rgba(212, 175, 55, 0.45)', dark: 'rgba(40, 100, 255, 0.45)' },
+            { x: 0, y: 0, vx: -1.0, vy: 0.8, r: 0, light: 'rgba(158, 27, 34, 0.35)', dark: 'rgba(212, 175, 55, 0.25)' },
+            { x: 0, y: 0, vx: 0.6, vy: -1.2, r: 0, light: 'rgba(253, 251, 247, 0.5)', dark: 'rgba(20, 20, 40, 0.5)' }
         ];
 
         function initBg() {
-            // Only trigger a full reset if the phone is physically rotated (width changes)
             if (window.innerWidth !== lastWidth || bgWidth === undefined) {
                 bgWidth = window.innerWidth;
                 bgHeight = window.innerHeight;
@@ -322,8 +321,6 @@
 
                 lastWidth = window.innerWidth;
             } else {
-                // If it's just the URL bar moving, only update the height boundary
-                // but DO NOT teleport the orbs back to the start!
                 bgHeight = window.innerHeight;
                 bgCanvas.height = bgHeight;
             }
@@ -338,11 +335,13 @@
 
             blobs.forEach(b => {
                 b.x += b.vx; b.y += b.vy;
-                // Soft boundary bouncing
-                if (b.x < -b.r) b.vx = Math.abs(b.vx);
-                if (b.x > bgWidth + b.r) b.vx = -Math.abs(b.vx);
-                if (b.y < -b.r) b.vy = Math.abs(b.vy);
-                if (b.y > bgHeight + b.r) b.vy = -Math.abs(b.vy);
+                
+                // Tightened boundaries: The center of the orb hits the screen edge and bounces.
+                // This ensures at least half of the orb is ALWAYS on the screen.
+                if (b.x < 0) b.vx = Math.abs(b.vx);
+                if (b.x > bgWidth) b.vx = -Math.abs(b.vx);
+                if (b.y < 0) b.vy = Math.abs(b.vy);
+                if (b.y > bgHeight) b.vy = -Math.abs(b.vy);
 
                 bgCtx.beginPath();
                 bgCtx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
@@ -351,7 +350,7 @@
             });
             requestAnimationFrame(drawBg);
         }
-        drawBg(); // Start the liquid loop
+        drawBg(); 
 
         // === ALL EXISTING CORE LOGIC REMAINS UNTOUCHED ===
 
