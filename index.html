@@ -1,1 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- Text Message Preview Tags (Open Graph) -->
+    <meta property="og:title" content="Yousuf & Nafeesa's Walima - Find Your Seat">
+    <meta property="og:description" content="Your seat awaits. Enter your name to find your table for the evening.">
+    <meta property="og:image" content="https://yousufquraishi.github.io/banner.jpg">
+    <meta property="og:url" content="https://yousufquraishi.github.io/">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
 
+    <title>Yousuf & Nafeesa's Walima Seating</title>
+    <style>
+        :root {
+            --bg-color: #FDFBF7; 
+            --text-color: #2B2B2B; 
+            --accent-color: #9E1B22; 
+            --gold-accent: #D4AF37; 
+            /* Frosted Glass Variables - Light Mode */
+            --card-bg: rgba(255, 255, 255, 0.65); 
+            --search-bg: rgba(255, 255, 255, 0.55);
+            --search-border: rgba(255, 255, 255, 0.8);
+            --subtext-color: #555;
+            --table-label-color: #888;
+        }
+
+        /* Frosted Glass Variables - Dark Mode */
+        body.dark-mode {
+            --bg-color: #1A1A1D; 
+            --text-color: #FDFBF7; 
+            --accent-color: #B22222; 
+            --card-bg: rgba(38, 38, 41, 0.65); 
+            --search-bg: rgba(42, 42, 45, 0.55);
+            --search-border: rgba(255, 255, 255, 0.1);
+            --subtext-color: #AAA;
+            --table-label-color: #999;
+        }
+        
+        html, body {
+            overscroll-behavior-y: none; 
+            -webkit-tap-highlight-color: transparent; 
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        body.splash-active {
+            overflow: hidden; 
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold-accent); 
+            border-radius: 10px;
+        }
+
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease-in-out, visibility 0.8s;
+        }
+
+        #splash-screen h1 {
+            color: var(--gold-accent);
+            font-size: 3.5rem;
+            font-style: italic;
+            font-family: 'Georgia', serif;
+            animation: pulse 1.5s infinite;
+            letter-spacing: 2px;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.7; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1.05); }
+            100% { opacity: 0.7; transform: scale(0.95); }
+        }
+
+        .theme-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--search-border);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 50%;
+            width: 55px;
+            height: 55px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.6rem;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
+            border-color: var(--gold-accent);
+        }
+
+        body.dark-mode .theme-toggle {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .header-image {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            border-bottom: 3px solid var(--accent-color);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.5s ease;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+            padding: 20px 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        .bismillah {
+            font-size: 0.95rem;
+            color: var(--gold-accent);
+            font-style: italic;
+            margin-bottom: 25px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            margin-top: 0;
+            color: var(--accent-color);
+            font-style: italic;
+            margin-bottom: 25px;
+            position: relative;
+            display: inline-block;
+            transition: color 0.5s ease;
+        }
+
+        h2::before, h2::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 40px;
+            height: 1px;
+            background-color: var(--gold-accent);
+        }
+
+        h2::before { right: 100%; margin-right: 15px; }
+        h2::after { left: 100%; margin-left: 15px; }
+
+        p.instructions {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            color: var(--subtext-color);
+            font-style: italic;
+            transition: color 0.5s ease;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.2rem;
+            border: 1px solid var(--search-border);
+            border-radius: 30px;
+            box-sizing: border-box;
+            outline: none;
+            transition: all 0.4s ease;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            text-align: center;
+            background-color: var(--search-bg);
+            color: var(--text-color);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .search-box:focus {
+            border-color: var(--gold-accent);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+            transform: translateY(-2px);
+            background-color: var(--card-bg);
+        }
+
+        #results {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        #results:not(:empty) {
+            padding-bottom: 350px; 
+        }
+
+        .guest-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--search-border);
+            border-left: 6px solid var(--accent-color);
+            padding: 22px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: left;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.5s ease, border-color 0.5s ease;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .guest-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        .table-info {
+            text-align: right;
+        }
+        
+        .table-label {
+            font-size: 0.8rem;
+            color: var(--table-label-color);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 2px;
+            transition: color 0.5s ease;
+        }
+
+        .table-number {
+            font-size: 2.2rem;
+            color: var(--gold-accent);
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        @keyframes slideUpFade {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .footer {
+            margin-top: auto;
+            padding: 20px;
+            font-size: 0.85rem;
+            color: var(--subtext-color);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-align: center;
+            line-height: 1.8;
+            transition: color 0.5s ease;
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-time {
+            color: var(--gold-accent);
+            font-style: italic;
+            text-transform: none;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            display: block;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body class="splash-active">
+
+    <div id="splash-screen">
+        <h1>Y & N</h1>
+    </div>
+
+    <img src="banner.jpg" alt="Walima Banner" class="header-image" onerror="this.style.display='none'">
+
+    <div class="container">
+        <div class="bismillah">In the name of Allah, The Most Beneficent, The Most Merciful</div>
+        
+        <h1 style="font-size: 2.3rem; margin-bottom: 5px; font-weight: normal; letter-spacing: 1px;">Yousuf & Nafeesa's</h1>
+        <h2>Walima</h2>
+        
+        <p class="instructions">Your seat awaits. Enter your name to begin.</p>
+        
+        <input type="text" id="searchInput" class="search-box" placeholder="Tap here to search..." onkeyup="searchGuests()">
+        
+        <div id="results"></div>
+    </div>
+
+    <div class="footer">
+        JUNE 27, 2026 • ROYAL PALM BANQUET<br>
+        <span class="footer-time">Appetizers Begin at 6:00 PM</span>
+    </div>
+
+    <button id="darkModeToggle" class="theme-toggle" aria-label="Toggle Evening Mode">🌙</button>
+
+    <script>
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                splash.style.opacity = '0';
+                splash.style.visibility = 'hidden';
+                document.body.classList.remove('splash-active');
+            }, 1200); 
+        });
+
+        function triggerHaptic() {
+            if (navigator.vibrate) {
+                navigator.vibrate(40); 
+            }
+        }
+
+        const guests = [{"Table": 1, "Name": "Azad"}, {"Table": 1, "Name": "Azweem"}, {"Table": 1, "Name": "Fazeela"}, {"Table": 1, "Name": "Fazie"}, {"Table": 1, "Name": "Grandma"}, {"Table": 1, "Name": "Grandpa"}, {"Table": 1, "Name": "Grandpa Hakeek"}, {"Table": 1, "Name": "Shelly"}, {"Table": 2, "Name": "Alec"}, {"Table": 2, "Name": "Alisha"}, {"Table": 2, "Name": "Eric"}, {"Table": 2, "Name": "Natasha"}, {"Table": 2, "Name": "Riyad"}, {"Table": 2, "Name": "Sahil"}, {"Table": 2, "Name": "Sayid"}, {"Table": 2, "Name": "Shiraz"}, {"Table": 3, "Name": "Ahmed"}, {"Table": 3, "Name": "Bilal"}, {"Table": 3, "Name": "Brianna"}, {"Table": 3, "Name": "Maurice"}, {"Table": 3, "Name": "Nabeela"}, {"Table": 3, "Name": "Shaneeza"}, {"Table": 3, "Name": "Shonique"}, {"Table": 3, "Name": "Simone"}, {"Table": 4, "Name": "Aneisa tentative"}, {"Table": 4, "Name": "Arif"}, {"Table": 4, "Name": "Ayube"}, {"Table": 4, "Name": "Feroz"}, {"Table": 4, "Name": "Golin"}, {"Table": 4, "Name": "Lisa"}, {"Table": 4, "Name": "Ramzan"}, {"Table": 4, "Name": "Sharmila"}, {"Table": 4, "Name": "Zalo"}, {"Table": 5, "Name": "Alishba"}, {"Table": 5, "Name": "Ayaz"}, {"Table": 5, "Name": "Ayaz wife"}, {"Table": 5, "Name": "Fuzail"}, {"Table": 5, "Name": "Irana"}, {"Table": 5, "Name": "Ishaan"}, {"Table": 5, "Name": "Ismail"}, {"Table": 5, "Name": "Mohammed"}, {"Table": 6, "Name": "Christy"}, {"Table": 6, "Name": "Jamila Azees"}, {"Table": 6, "Name": "Omar"}, {"Table": 6, "Name": "Raymond"}, {"Table": 6, "Name": "Shaimoon"}, {"Table": 6, "Name": "Sheriff"}, {"Table": 6, "Name": "Zarina"}, {"Table": 6, "Name": "Zayn"}, {"Table": 7, "Name": "Bibi"}, {"Table": 7, "Name": "Khadija"}, {"Table": 7, "Name": "Nazareen"}, {"Table": 7, "Name": "Nazereen huzz"}, {"Table": 7, "Name": "Raheem"}, {"Table": 7, "Name": "Rubeena"}, {"Table": 7, "Name": "Rubeena Huzz"}, {"Table": 8, "Name": "Fameeda huzz"}, {"Table": 8, "Name": "Fameeda kid"}, {"Table": 8, "Name": "Fazal Khan"}, {"Table": 8, "Name": "Zalena Khan"}, {"Table": 8, "Name": "Zur huzz"}, {"Table": 8, "Name": "Zur kid 1"}, {"Table": 8, "Name": "Zur kid 2"}, {"Table": 9, "Name": "Amar"}, {"Table": 9, "Name": "Amo"}, {"Table": 9, "Name": "Amo wife"}, {"Table": 9, "Name": "Fuzia"}, {"Table": 9, "Name": "Kalam"}, {"Table": 9, "Name": "Kameela"}, {"Table": 9, "Name": "Sharifa"}, {"Table": 10, "Name": "Carol"}, {"Table": 10, "Name": "Charles"}, {"Table": 10, "Name": "Doreen"}, {"Table": 10, "Name": "Eina"}, {"Table": 10, "Name": "Fiza"}, {"Table": 10, "Name": "Rampal"}, {"Table": 10, "Name": "Ravi"}, {"Table": 10, "Name": "Zaid"}, {"Table": 11, "Name": "Alyssa"}, {"Table": 11, "Name": "Amani"}, {"Table": 11, "Name": "Farisha"}, {"Table": 11, "Name": "Fazil"}, {"Table": 11, "Name": "Hafeez"}, {"Table": 11, "Name": "Jason"}, {"Table": 11, "Name": "Krishna"}, {"Table": 11, "Name": "Sally"}, {"Table": 12, "Name": "Aaliyah"}, {"Table": 12, "Name": "Haleema"}, {"Table": 12, "Name": "Iris"}, {"Table": 12, "Name": "Kayden"}, {"Table": 12, "Name": "Munir"}, {"Table": 12, "Name": "Rozeena"}, {"Table": 12, "Name": "Sheriff"}, {"Table": 12, "Name": "Zeena"}, {"Table": 13, "Name": "Imran"}, {"Table": 13, "Name": "Imran wife"}, {"Table": 13, "Name": "Leah"}, {"Table": 13, "Name": "Riyaz"}, {"Table": 13, "Name": "Riyaz wife"}, {"Table": 13, "Name": "Safraz"}, {"Table": 13, "Name": "Safraz kid 1"}, {"Table": 13, "Name": "Safraz kid 2"}, {"Table": 13, "Name": "Safraz kid 3"}, {"Table": 13, "Name": "Safraz kid 4"}, {"Table": 14, "Name": "Amir"}, {"Table": 14, "Name": "Andre"}, {"Table": 14, "Name": "Samirah"}, {"Table": 14, "Name": "Shaleinie"}, {"Table": 14, "Name": "Shalenie daughter"}, {"Table": 14, "Name": "Sharon"}, {"Table": 14, "Name": "Shazaad tentative"}, {"Table": 14, "Name": "Shazaad wife tentative"}, {"Table": 14, "Name": "Zaheera"}, {"Table": 15, "Name": "Azad (Moses)"}, {"Table": 15, "Name": "Farouq"}, {"Table": 15, "Name": "Farouq wife"}, {"Table": 15, "Name": "Rubeena"}, {"Table": 15, "Name": "Sabrina"}, {"Table": 15, "Name": "Sally Subadar"}, {"Table": 15, "Name": "Shafiq"}, {"Table": 15, "Name": "Shenny"}, {"Table": 15, "Name": "Shenny huzz"}, {"Table": 16, "Name": "Brad"}, {"Table": 16, "Name": "Bucky"}, {"Table": 16, "Name": "Curly"}, {"Table": 16, "Name": "James"}, {"Table": 16, "Name": "Meena"}, {"Table": 16, "Name": "Walis"}, {"Table": 16, "Name": "Zalina"}, {"Table": 17, "Name": "Abhi"}, {"Table": 17, "Name": "Fareeda tentative"}, {"Table": 17, "Name": "Inshaan"}, {"Table": 17, "Name": "Marsha"}, {"Table": 17, "Name": "Nazeema"}, {"Table": 17, "Name": "Rozie"}, {"Table": 18, "Name": "Adrian"}, {"Table": 18, "Name": "Carise"}, {"Table": 18, "Name": "Gabriele"}, {"Table": 18, "Name": "Isaac"}, {"Table": 18, "Name": "Jebesha"}, {"Table": 18, "Name": "Lubna"}, {"Table": 18, "Name": "Mashood"}, {"Table": 18, "Name": "Reeta"}, {"Table": 18, "Name": "Ridwan"}, {"Table": 18, "Name": "Varsh"}]; 
+
+        function searchGuests() {
+            triggerHaptic(); 
+            const input = document.getElementById('searchInput').value.toLowerCase().trim();
+            const resultsDiv = document.getElementById('results');
+            
+            if (input.length < 2) {
+                resultsDiv.innerHTML = '';
+                return;
+            }
+
+            const filteredGuests = guests.filter(guest => 
+                guest.Name.toLowerCase().includes(input)
+            );
+
+            if (filteredGuests.length === 0) {
+                resultsDiv.innerHTML = '<p style="color: var(--subtext-color); font-style: italic; margin-top: 20px; animation: slideUpFade 0.5s forwards; opacity: 0;">No guest found matching "' + input + '". Please check the spelling or ask a host for help.</p>';
+                return;
+            }
+
+            let html = '';
+            filteredGuests.forEach((guest, index) => {
+                const delay = index * 0.08;
+                html += `
+                    <div class="guest-card" style="animation-delay: ${delay}s">
+                        <div class="guest-name">${guest.Name}</div>
+                        <div class="table-info">
+                            <div class="table-label">Table</div>
+                            <div class="table-number">${guest.Table}</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            resultsDiv.innerHTML = html;
+        }
+
+        const themeToggle = document.getElementById('darkModeToggle');
+        themeToggle.addEventListener('click', () => {
+            triggerHaptic(); 
+            document.body.classList.toggle('dark-mode');
+            
+            if (document.body.classList.contains('dark-mode')) {
+                themeToggle.innerHTML = '☀️';
+            } else {
+                themeToggle.innerHTML = '🌙';
+            }
+        });
+
+        // Register Service Worker for Offline Mode
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').then(registration => {
+                    console.log('Offline mode activated.');
+                }).catch(error => {
+                    console.log('Offline mode setup failed:', error);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
