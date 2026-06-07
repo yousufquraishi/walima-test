@@ -13,29 +13,30 @@
             --text-color: #2B2B2B; 
             --accent-color: #9E1B22; 
             --gold-accent: #D4AF37; 
-            /* True Glassmorphism Variables */
-            --glass-bg: rgba(255, 255, 255, 0.4); 
-            --glass-border: rgba(255, 255, 255, 0.7);
-            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.07);
-            --nav-bg: rgba(253, 251, 247, 0.75);
+            /* Enhanced Glass Variables */
+            --glass-bg: rgba(255, 255, 255, 0.55); 
+            --glass-border: rgba(255, 255, 255, 0.9);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
+            --nav-bg: rgba(253, 251, 247, 0.85);
             --subtext-color: #555;
             --table-label-color: #888;
-            --orb-1: rgba(212, 175, 55, 0.15); /* Gold orb */
-            --orb-2: rgba(158, 27, 34, 0.1);   /* Crimson orb */
+            /* High-visibility Orbs */
+            --orb-1: rgba(212, 175, 55, 0.35); /* Bright Gold */
+            --orb-2: rgba(158, 27, 34, 0.25);  /* Deep Crimson */
         }
 
         body.dark-mode {
-            --bg-color: #0d0d0f; 
+            --bg-color: #0A0A0C; 
             --text-color: #FDFBF7; 
             --accent-color: #B22222; 
-            --glass-bg: rgba(30, 30, 35, 0.45); 
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
-            --nav-bg: rgba(13, 13, 15, 0.85);
+            --glass-bg: rgba(25, 25, 30, 0.55); 
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            --nav-bg: rgba(10, 10, 12, 0.85);
             --subtext-color: #AAA;
             --table-label-color: #999;
-            --orb-1: rgba(30, 144, 255, 0.08); /* Midnight Blue orb */
-            --orb-2: rgba(212, 175, 55, 0.05); /* Faint Gold orb */
+            --orb-1: rgba(40, 100, 255, 0.25); /* Bright Midnight Blue */
+            --orb-2: rgba(212, 175, 55, 0.15); /* Gold */
         }
         
         html, body { overscroll-behavior-y: none; -webkit-tap-highlight-color: transparent; }
@@ -52,25 +53,31 @@
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: var(--gold-accent); border-radius: 10px; }
 
-        /* LIVE AMBIENT BACKGROUND ORBS */
+        /* FIXED LAYER: AMBIENT ORBS */
         .ambient-background {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: -1; overflow: hidden; pointer-events: none;
+            z-index: 1; /* Pushed above the background color, behind the content */
+            overflow: hidden; pointer-events: none;
         }
         .orb {
-            position: absolute; border-radius: 50%; filter: blur(60px);
-            animation: floatOrb 20s infinite alternate ease-in-out;
+            position: absolute; border-radius: 50%; filter: blur(70px);
+            animation: floatOrb 15s infinite alternate ease-in-out;
             transition: background 0.8s ease;
         }
-        .orb-1 { width: 300px; height: 300px; background: var(--orb-1); top: -50px; left: -50px; }
-        .orb-2 { width: 400px; height: 400px; background: var(--orb-2); bottom: 10%; right: -100px; animation-delay: -5s; }
+        /* Increased size to guarantee they are visible on mobile screens */
+        .orb-1 { width: 400px; height: 400px; background: var(--orb-1); top: -100px; left: -100px; }
+        .orb-2 { width: 450px; height: 450px; background: var(--orb-2); bottom: 5%; right: -150px; animation-delay: -5s; }
         
         @keyframes floatOrb {
             0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(50px, 100px) scale(1.2); }
+            100% { transform: translate(60px, 120px) scale(1.1); }
         }
 
-        /* THE GOLDEN REVEAL WIPE */
+        /* Elevating content ABOVE the orbs */
+        .header-image, .container, .bottom-nav, .theme-toggle, .footer {
+            position: relative; z-index: 10;
+        }
+
         #golden-wipe {
             position: fixed; bottom: 0; left: 0; width: 100vw; height: 0;
             background: linear-gradient(135deg, #D4AF37, #AA8529);
@@ -78,7 +85,6 @@
             pointer-events: none;
         }
 
-        /* Splash Screen */
         #splash-screen {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background-color: var(--bg-color); display: flex; justify-content: center;
@@ -90,22 +96,20 @@
         }
         @keyframes pulse { 0%, 100% { opacity: 0.7; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1.05); } }
 
-        /* Floating Theme Toggle (SVG Vector) */
         .theme-toggle {
             position: fixed; bottom: 100px; right: 25px;
-            background: var(--glass-bg); border: 1px solid var(--glass-border);
-            box-shadow: var(--glass-shadow); backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px); border-radius: 50%; width: 50px; height: 50px;
-            display: flex; justify-content: center; align-items: center;
-            cursor: pointer; z-index: 1000; transition: all 0.3s ease;
+            background: var(--glass-bg); border: 2px solid var(--glass-border);
+            box-shadow: var(--glass-shadow); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-radius: 50%; width: 55px; height: 55px; display: flex; justify-content: center; 
+            align-items: center; cursor: pointer; transition: all 0.3s ease;
         }
-        .theme-toggle svg { width: 22px; height: 22px; fill: var(--text-color); transition: fill 0.5s ease; }
-        .theme-toggle:hover { transform: translateY(-4px) scale(1.05); border-color: var(--gold-accent); }
+        .theme-toggle svg { width: 26px; height: 26px; fill: var(--text-color); transition: fill 0.5s ease; }
+        .theme-toggle:hover, .theme-toggle:active { transform: translateY(-4px) scale(1.05); border-color: var(--gold-accent); }
 
         #celebration-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 8999; }
 
-        .header-image { width: 100%; max-width: 800px; height: auto; border-bottom: 3px solid var(--accent-color); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); position: relative; z-index: 10; }
-        .container { width: 90%; max-width: 600px; text-align: center; padding: 20px 0; position: relative; z-index: 10; }
+        .header-image { width: 100%; max-width: 800px; height: auto; border-bottom: 3px solid var(--accent-color); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); }
+        .container { width: 90%; max-width: 600px; text-align: center; padding: 20px 0; }
 
         .tab-content { display: none; width: 100%; }
         .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
@@ -118,107 +122,91 @@
 
         .instructions { font-size: 1.1rem; margin-bottom: 25px; color: var(--subtext-color); font-style: italic; }
 
-        /* Glass Search Box */
         .search-box {
-            width: 100%; padding: 18px; font-size: 1.2rem; border: 1px solid var(--glass-border);
+            width: 100%; padding: 18px; font-size: 1.2rem; border: 2px solid var(--glass-border);
             border-radius: 30px; box-sizing: border-box; outline: none; transition: all 0.4s ease;
             text-align: center; background: var(--glass-bg); color: var(--text-color);
-            box-shadow: var(--glass-shadow); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            box-shadow: var(--glass-shadow); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
         }
-        .search-box:focus { border-color: var(--gold-accent); box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); }
+        .search-box:focus { border-color: var(--gold-accent); box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
 
-        /* 3D PARALLAX GUEST CARDS */
+        /* 3D PARALLAX GUEST CARDS - MOBILE TOUCH & DESKTOP HOVER ENABLED */
         .result-item {
-            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            background: var(--glass-bg); border: 2px solid var(--glass-border);
             padding: 18px 20px; margin-top: 15px; border-radius: 16px; display: flex;
             justify-content: space-between; align-items: center; cursor: pointer;
-            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             box-shadow: var(--glass-shadow); text-align: left;
             transition: transform 0.1s ease-out, border-color 0.3s ease, box-shadow 0.3s ease;
-            transform-style: preserve-3d; /* Enables 3D rotation */
+            transform-style: preserve-3d;
         }
-        .result-item:active { transform: scale(0.98) !important; }
 
-        /* PERSONALIZED SCREEN TAKEOVER VIEW */
         #takeover-view {
-            display: none; background: var(--glass-bg); border: 1px solid var(--glass-border);
+            display: none; background: var(--glass-bg); border: 2px solid var(--glass-border);
             padding: 40px 30px; border-radius: 24px; box-shadow: var(--glass-shadow);
-            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            margin-top: 20px;
+            backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); margin-top: 20px;
         }
         
         .takeover-welcome { font-size: 1.3rem; margin-bottom: 5px; font-weight: normal; color: var(--subtext-color); font-style: italic; }
         
-        /* Dynamic Calligraphy */
         .takeover-highlight { 
-            display: block; font-family: 'Great Vibes', cursive; font-size: 3.8rem; 
-            color: var(--accent-color); margin: 10px 0 20px 0; line-height: 1;
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.05);
+            display: block; font-family: 'Great Vibes', cursive; font-size: 4rem; 
+            color: var(--accent-color); margin: 10px 0 20px 0; line-height: 1; text-shadow: 2px 2px 10px rgba(0,0,0,0.1);
         }
         
         .takeover-card {
-            border: 1px solid var(--gold-accent); border-radius: 20px; padding: 30px; margin: 25px 0; 
-            background: linear-gradient(145deg, rgba(212, 175, 55, 0.1), transparent);
-            box-shadow: inset 0 0 20px rgba(212,175,55,0.05);
+            border: 2px solid var(--gold-accent); border-radius: 20px; padding: 30px; margin: 25px 0; 
+            background: linear-gradient(145deg, rgba(212, 175, 55, 0.15), transparent);
         }
         .takeover-label { text-transform: uppercase; letter-spacing: 3px; font-size: 0.9rem; color: var(--table-label-color); }
         .takeover-number { font-size: 5.5rem; font-weight: bold; color: var(--gold-accent); margin: 10px 0; line-height: 1; }
         
-        /* Who is at my table section */
         .tablemates-btn {
             background: none; border: none; color: var(--subtext-color); font-size: 0.9rem;
             text-transform: uppercase; letter-spacing: 1px; cursor: pointer; margin-top: 15px;
-            display: flex; align-items: center; justify-content: center; width: 100%; gap: 8px;
-            transition: color 0.3s ease;
+            display: flex; align-items: center; justify-content: center; width: 100%; gap: 8px; transition: color 0.3s ease;
         }
         .tablemates-btn:hover { color: var(--gold-accent); }
-        .tablemates-btn svg { width: 16px; height: 16px; fill: currentColor; }
+        .tablemates-btn svg { width: 18px; height: 18px; fill: currentColor; }
         
         .tablemates-list {
             display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--glass-border);
-            font-size: 1rem; color: var(--text-color); line-height: 1.8;
-            animation: slideDownFade 0.4s ease forwards; text-align: center;
+            font-size: 1rem; color: var(--text-color); line-height: 1.8; animation: slideDownFade 0.4s ease forwards; text-align: center;
         }
         @keyframes slideDownFade { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
         .back-btn {
-            background: transparent; border: 1px solid var(--gold-accent); color: var(--text-color);
-            padding: 14px 35px; border-radius: 30px; font-size: 1rem; cursor: pointer;
-            transition: all 0.3s ease; font-family: 'Georgia', serif; font-style: italic;
-            backdrop-filter: blur(5px);
+            background: transparent; border: 2px solid var(--gold-accent); color: var(--text-color);
+            padding: 14px 35px; border-radius: 30px; font-size: 1rem; cursor: pointer; font-family: 'Georgia', serif; font-style: italic;
         }
-        .back-btn:hover { background-color: var(--gold-accent); color: white; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212,175,55,0.3); }
 
-        /* INTERACTIVE ITINERARY TIMELINE (Glassmorphism applied) */
         .timeline { position: relative; max-width: 500px; margin: 30px auto; padding-left: 30px; text-align: left; }
         .timeline::before { content: ''; position: absolute; left: 9px; top: 5px; bottom: 5px; width: 2px; background-color: var(--glass-border); }
         .timeline-item { position: relative; margin-bottom: 35px; transition: all 0.4s ease; }
         .timeline-node { position: absolute; left: -26px; top: 4px; width: 12px; height: 12px; border-radius: 50%; background-color: var(--glass-border); border: 4px solid var(--bg-color); transition: all 0.4s ease; }
-        .timeline-content { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 18px; border-radius: 16px; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: var(--glass-shadow); transition: all 0.4s ease; }
+        .timeline-content { background: var(--glass-bg); border: 2px solid var(--glass-border); padding: 18px; border-radius: 16px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: var(--glass-shadow); transition: all 0.4s ease; }
         .timeline-time { font-size: 0.85rem; color: var(--gold-accent); font-weight: bold; letter-spacing: 1px; }
         .timeline-title { font-size: 1.2rem; margin: 4px 0; font-weight: normal; color: var(--text-color); }
         .timeline-desc { font-size: 0.95rem; color: var(--subtext-color); margin: 0; font-style: italic; }
         
         .timeline-item.active .timeline-node { background-color: var(--gold-accent); transform: scale(1.3); box-shadow: 0 0 12px var(--gold-accent); }
-        .timeline-item.active .timeline-content { border-color: var(--gold-accent); box-shadow: 0 8px 25px rgba(212, 175, 55, 0.2); transform: translateX(6px); }
+        .timeline-item.active .timeline-content { border-color: var(--gold-accent); box-shadow: 0 8px 25px rgba(212, 175, 55, 0.25); transform: translateX(6px); }
 
-        /* APP-STYLE FIXED BOTTOM NAVIGATION BAR */
         .bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 75px;
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 80px;
             background: var(--nav-bg); border-top: 1px solid var(--glass-border);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
             display: flex; justify-content: space-around; align-items: center; z-index: 5000;
         }
         .nav-item {
             background: none; border: none; color: var(--table-label-color);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.75rem; font-weight: 500;
-            cursor: pointer; width: 100%; height: 100%; transition: all 0.3s ease; gap: 5px;
+            font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.8rem; font-weight: bold;
+            cursor: pointer; width: 100%; height: 100%; gap: 6px;
         }
-        /* Custom SVG Vector Styling */
-        .nav-item svg { width: 24px; height: 24px; fill: currentColor; transition: transform 0.2s ease; }
+        .nav-item svg { width: 28px; height: 28px; fill: currentColor; transition: transform 0.2s ease; }
         .nav-item.active { color: var(--accent-color); }
-        .nav-item.active svg { transform: translateY(-3px) scale(1.1); fill: var(--accent-color); }
+        .nav-item.active svg { transform: translateY(-4px) scale(1.15); fill: var(--accent-color); }
 
         .footer { padding: 20px; font-size: 0.85rem; color: var(--subtext-color); letter-spacing: 2px; text-transform: uppercase; text-align: center; position: relative; z-index: 10; }
         .footer-time { color: var(--gold-accent); font-style: italic; text-transform: none; font-size: 1rem; margin-top: 5px; display: block; }
@@ -226,6 +214,7 @@
 </head>
 <body class="splash-active">
 
+    <!-- Orbs are now guaranteed to sit behind the glass, but in front of the background color -->
     <div class="ambient-background">
         <div class="orb orb-1"></div>
         <div class="orb orb-2"></div>
@@ -247,7 +236,6 @@
         
         <div id="seating-tab" class="tab-content active">
             <h2>Walima</h2>
-            
             <div id="search-interface">
                 <p class="instructions">Your seat awaits. Enter your name to begin.</p>
                 <input type="text" id="searchInput" class="search-box" placeholder="Tap here to search..." onkeyup="searchGuests()">
@@ -260,7 +248,6 @@
                 <div class="takeover-card">
                     <div class="takeover-label">Your Assigned Seat</div>
                     <div id="takeover-table-number" class="takeover-number">1</div>
-                    
                     <button class="tablemates-btn" onclick="toggleTablemates()">
                         <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
                         See Tablemates
@@ -287,12 +274,14 @@
         JUNE 27, 2026 • ROYAL PALM BANQUET<br><span class="footer-time">Appetizers Begin at 6:00 PM</span>
     </div>
 
+    <!-- Enhanced Theme Toggle SVG -->
     <button id="darkModeToggle" class="theme-toggle" aria-label="Toggle Evening Mode">
         <svg id="theme-icon" viewBox="0 0 24 24">
             <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-3.03 0-5.5-2.47-5.5-5.5 0-1.82.89-3.42 2.26-4.4C12.92 3.04 12.46 3 12 3z"/>
         </svg>
     </button>
 
+    <!-- Enhanced Navigation SVGs -->
     <nav class="bottom-nav">
         <button class="nav-item active" onclick="switchTab('seating-tab')">
             <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
@@ -305,11 +294,9 @@
     </nav>
 
     <script>
-        // Full Guest Database
         const guests = [{"Table": 1, "Name": "Azad"}, {"Table": 1, "Name": "Azweem"}, {"Table": 1, "Name": "Fazeela"}, {"Table": 1, "Name": "Fazie"}, {"Table": 1, "Name": "Grandma"}, {"Table": 1, "Name": "Grandpa"}, {"Table": 1, "Name": "Grandpa Hakeek"}, {"Table": 1, "Name": "Shelly"}, {"Table": 2, "Name": "Alec"}, {"Table": 2, "Name": "Alisha"}, {"Table": 2, "Name": "Eric"}, {"Table": 2, "Name": "Natasha"}, {"Table": 2, "Name": "Riyad"}, {"Table": 2, "Name": "Sahil"}, {"Table": 2, "Name": "Sayid"}, {"Table": 2, "Name": "Shiraz"}, {"Table": 3, "Name": "Ahmed"}, {"Table": 3, "Name": "Bilal"}, {"Table": 3, "Name": "Brianna"}, {"Table": 3, "Name": "Maurice"}, {"Table": 3, "Name": "Nabeela"}, {"Table": 3, "Name": "Shaneeza"}, {"Table": 3, "Name": "Shonique"}, {"Table": 3, "Name": "Simone"}, {"Table": 4, "Name": "Aneisa tentative"}, {"Table": 4, "Name": "Arif"}, {"Table": 4, "Name": "Ayube"}, {"Table": 4, "Name": "Feroz"}, {"Table": 4, "Name": "Golin"}, {"Table": 4, "Name": "Lisa"}, {"Table": 4, "Name": "Ramzan"}, {"Table": 4, "Name": "Sharmila"}, {"Table": 4, "Name": "Zalo"}, {"Table": 5, "Name": "Alishba"}, {"Table": 5, "Name": "Ayaz"}, {"Table": 5, "Name": "Ayaz wife"}, {"Table": 5, "Name": "Fuzail"}, {"Table": 5, "Name": "Irana"}, {"Table": 5, "Name": "Ishaan"}, {"Table": 5, "Name": "Ismail"}, {"Table": 5, "Name": "Mohammed"}, {"Table": 6, "Name": "Christy"}, {"Table": 6, "Name": "Jamila Azees"}, {"Table": 6, "Name": "Omar"}, {"Table": 6, "Name": "Raymond"}, {"Table": 6, "Name": "Shaimoon"}, {"Table": 6, "Name": "Sheriff"}, {"Table": 6, "Name": "Zarina"}, {"Table": 6, "Name": "Zayn"}, {"Table": 7, "Name": "Bibi"}, {"Table": 7, "Name": "Khadija"}, {"Table": 7, "Name": "Nazareen"}, {"Table": 7, "Name": "Nazereen huzz"}, {"Table": 7, "Name": "Raheem"}, {"Table": 7, "Name": "Rubeena"}, {"Table": 7, "Name": "Rubeena Huzz"}, {"Table": 8, "Name": "Fameeda huzz"}, {"Table": 8, "Name": "Fameeda kid"}, {"Table": 8, "Name": "Fazal Khan"}, {"Table": 8, "Name": "Zalena Khan"}, {"Table": 8, "Name": "Zur huzz"}, {"Table": 8, "Name": "Zur kid 1"}, {"Table": 8, "Name": "Zur kid 2"}, {"Table": 9, "Name": "Amar"}, {"Table": 9, "Name": "Amo"}, {"Table": 9, "Name": "Amo wife"}, {"Table": 9, "Name": "Fuzia"}, {"Table": 9, "Name": "Kalam"}, {"Table": 9, "Name": "Kameela"}, {"Table": 9, "Name": "Sharifa"}, {"Table": 10, "Name": "Carol"}, {"Table": 10, "Name": "Charles"}, {"Table": 10, "Name": "Doreen"}, {"Table": 10, "Name": "Eina"}, {"Table": 10, "Name": "Fiza"}, {"Table": 10, "Name": "Rampal"}, {"Table": 10, "Name": "Ravi"}, {"Table": 10, "Name": "Zaid"}, {"Table": 11, "Name": "Alyssa"}, {"Table": 11, "Name": "Amani"}, {"Table": 11, "Name": "Farisha"}, {"Table": 11, "Name": "Fazil"}, {"Table": 11, "Name": "Hafeez"}, {"Table": 11, "Name": "Jason"}, {"Table": 11, "Name": "Krishna"}, {"Table": 11, "Name": "Sally"}, {"Table": 12, "Name": "Aaliyah"}, {"Table": 12, "Name": "Haleema"}, {"Table": 12, "Name": "Iris"}, {"Table": 12, "Name": "Kayden"}, {"Table": 12, "Name": "Munir"}, {"Table": 12, "Name": "Rozeena"}, {"Table": 12, "Name": "Sheriff"}, {"Table": 12, "Name": "Zeena"}, {"Table": 13, "Name": "Imran"}, {"Table": 13, "Name": "Imran wife"}, {"Table": 13, "Name": "Leah"}, {"Table": 13, "Name": "Riyaz"}, {"Table": 13, "Name": "Riyaz wife"}, {"Table": 13, "Name": "Safraz"}, {"Table": 13, "Name": "Safraz kid 1"}, {"Table": 13, "Name": "Safraz kid 2"}, {"Table": 13, "Name": "Safraz kid 3"}, {"Table": 13, "Name": "Safraz kid 4"}, {"Table": 14, "Name": "Amir"}, {"Table": 14, "Name": "Andre"}, {"Table": 14, "Name": "Samirah"}, {"Table": 14, "Name": "Shaleinie"}, {"Table": 14, "Name": "Shalenie daughter"}, {"Table": 14, "Name": "Sharon"}, {"Table": 14, "Name": "Shazaad tentative"}, {"Table": 14, "Name": "Shazaad wife tentative"}, {"Table": 14, "Name": "Zaheera"}, {"Table": 15, "Name": "Azad (Moses)"}, {"Table": 15, "Name": "Farouq"}, {"Table": 15, "Name": "Farouq wife"}, {"Table": 15, "Name": "Rubeena"}, {"Table": 15, "Name": "Sabrina"}, {"Table": 15, "Name": "Sally Subadar"}, {"Table": 15, "Name": "Shafiq"}, {"Table": 15, "Name": "Shenny"}, {"Table": 15, "Name": "Shenny huzz"}, {"Table": 16, "Name": "Brad"}, {"Table": 16, "Name": "Bucky"}, {"Table": 16, "Name": "Curly"}, {"Table": 16, "Name": "James"}, {"Table": 16, "Name": "Meena"}, {"Table": 16, "Name": "Walis"}, {"Table": 16, "Name": "Zalina"}, {"Table": 17, "Name": "Abhi"}, {"Table": 17, "Name": "Fareeda tentative"}, {"Table": 17, "Name": "Inshaan"}, {"Table": 17, "Name": "Marsha"}, {"Table": 17, "Name": "Nazeema"}, {"Table": 17, "Name": "Rozie"}, {"Table": 18, "Name": "Adrian"}, {"Table": 18, "Name": "Carise"}, {"Table": 18, "Name": "Gabriele"}, {"Table": 18, "Name": "Isaac"}, {"Table": 18, "Name": "Jebesha"}, {"Table": 18, "Name": "Lubna"}, {"Table": 18, "Name": "Mashood"}, {"Table": 18, "Name": "Reeta"}, {"Table": 18, "Name": "Ridwan"}, {"Table": 18, "Name": "Varsh"}];
 
-        let currentActiveGuest = "";
-        let currentActiveTable = null;
+        let currentActiveGuest = ""; let currentActiveTable = null;
 
         window.addEventListener('load', () => {
             setTimeout(() => {
@@ -358,10 +345,15 @@
 
             let html = '';
             filteredGuests.forEach(guest => {
-                // Escaping quotes just in case
                 const safeName = guest.Name.replace(/'/g, "\\'");
                 html += `
-                    <div class="result-item" onmousemove="handleParallax(event, this)" onmouseleave="resetParallax(this)" onclick="initiateGoldenReveal('${safeName}', ${guest.Table})">
+                    <div class="result-item" 
+                         onmousemove="handleMouseParallax(event, this)" 
+                         onmouseleave="resetParallax(this)" 
+                         ontouchmove="handleTouchParallax(event, this)" 
+                         ontouchstart="handleTouchParallax(event, this)" 
+                         ontouchend="resetParallax(this)"
+                         onclick="initiateGoldenReveal('${safeName}', ${guest.Table})">
                         <span class="guest-name" style="font-weight:bold;">${guest.Name}</span>
                         <span style="color: var(--gold-accent); font-size: 0.9rem; font-style: italic;">Select &rarr;</span>
                     </div>
@@ -370,70 +362,68 @@
             resultsDiv.innerHTML = html;
         }
 
-        // 3D Parallax Logic
-        function handleParallax(e, el) {
+        // DESKTOP Mouse Parallax
+        function handleMouseParallax(e, el) {
             const rect = el.getBoundingClientRect();
             const x = e.clientX - rect.left; 
             const y = e.clientY - rect.top;
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            const rotateX = ((y - centerY) / centerY) * -10; // Max 10 deg tilt
-            const rotateY = ((x - centerX) / centerX) * 10;
-            el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            const centerX = rect.width / 2; const centerY = rect.height / 2;
+            const rotateX = ((y - centerY) / centerY) * -12; 
+            const rotateY = ((x - centerX) / centerX) * 12;
+            el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.03, 1.03, 1.03)`;
             el.style.borderColor = 'var(--gold-accent)';
         }
+
+        // MOBILE Touch Parallax
+        function handleTouchParallax(e, el) {
+            const touch = e.touches[0];
+            const rect = el.getBoundingClientRect();
+            const x = touch.clientX - rect.left; 
+            const y = touch.clientY - rect.top;
+            const centerX = rect.width / 2; const centerY = rect.height / 2;
+            const rotateX = ((y - centerY) / centerY) * -15; 
+            const rotateY = ((x - centerX) / centerX) * 15;
+            el.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            el.style.borderColor = 'var(--gold-accent)';
+        }
+
         function resetParallax(el) {
             el.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
             el.style.borderColor = 'var(--glass-border)';
         }
 
-        // The Golden Reveal
         function initiateGoldenReveal(name, targetTable) {
             triggerHaptic();
             const wipe = document.getElementById('golden-wipe');
             
-            // Sweep Up
-            wipe.style.top = 'auto';
-            wipe.style.bottom = '0';
-            wipe.style.height = '100vh';
+            wipe.style.top = 'auto'; wipe.style.bottom = '0'; wipe.style.height = '100vh';
             
             setTimeout(() => {
-                // Switch interface behind the wipe
                 document.getElementById('search-interface').style.display = 'none';
                 document.getElementById('takeover-view').style.display = 'block';
                 document.getElementById('takeover-guest-name').innerText = name;
                 document.getElementById('tablemates-list').style.display = 'none';
-                currentActiveGuest = name;
-                currentActiveTable = targetTable;
+                currentActiveGuest = name; currentActiveTable = targetTable;
                 
-                // Sweep Away (Slide up and out)
-                wipe.style.bottom = 'auto';
-                wipe.style.top = '0';
-                wipe.style.height = '0';
+                wipe.style.bottom = 'auto'; wipe.style.top = '0'; wipe.style.height = '0';
                 
                 startCelebrationAnimation();
                 
-                // Odometer
                 const odometer = document.getElementById('takeover-table-number');
-                let current = 1;
-                const intervalTime = Math.max(Math.floor(400 / targetTable), 15);
+                let current = 1; const intervalTime = Math.max(Math.floor(400 / targetTable), 15);
                 const counter = setInterval(() => {
                     current++;
                     if (current >= targetTable) { odometer.innerText = targetTable; clearInterval(counter); }
                     else { odometer.innerText = current; }
                 }, intervalTime);
                 
-            }, 500); // Wait for wipe to cover screen
+            }, 500);
         }
 
-        // Who is at my table logic
         function toggleTablemates() {
             triggerHaptic();
             const listDiv = document.getElementById('tablemates-list');
-            if (listDiv.style.display === 'block') {
-                listDiv.style.display = 'none';
-                return;
-            }
+            if (listDiv.style.display === 'block') { listDiv.style.display = 'none'; return; }
             
             const mates = guests.filter(g => g.Table === currentActiveTable && g.Name !== currentActiveGuest);
             if (mates.length === 0) {
@@ -455,11 +445,9 @@
             window.scrollTo(0, 0);
         }
 
-        // Celebration Animation
         const canvas = document.getElementById('celebration-canvas');
         const ctx = canvas.getContext('2d');
-        let particles = [];
-        let animationFrameId;
+        let particles = []; let animationFrameId;
 
         function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         window.addEventListener('resize', resizeCanvas); resizeCanvas();
@@ -497,7 +485,6 @@
             else ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
 
-        // SVG Theme Toggle Logic
         const themeToggle = document.getElementById('darkModeToggle');
         const themeIcon = document.getElementById('theme-icon');
         const moonSvg = '<path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-3.03 0-5.5-2.47-5.5-5.5 0-1.82.89-3.42 2.26-4.4C12.92 3.04 12.46 3 12 3z"/>';
