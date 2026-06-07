@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <!-- ⚡ THE PRE-LOAD OPTIMIZATION ⚡ -->
-    <!-- Forces the browser to download the heavy assets instantly before rendering -->
     <link rel="preload" href="banner.jpg" as="image">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" as="style">
-    
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
     
     <title>Yousuf & Nafeesa's Walima Seating</title>
@@ -19,7 +17,6 @@
             --accent-color: #9E1B22; 
             --gold-accent: #D4AF37; 
             
-            /* Enhanced Glass Variables */
             --glass-bg: rgba(255, 255, 255, 0.55); 
             --glass-border: rgba(255, 255, 255, 0.6);
             --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
@@ -30,8 +27,6 @@
             
             --subtext-color: #555;
             --table-label-color: #888;
-            --orb-1: rgba(212, 175, 55, 0.35); 
-            --orb-2: rgba(158, 27, 34, 0.25);  
         }
 
         body.dark-mode {
@@ -44,13 +39,10 @@
             --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
             --nav-bg: rgba(10, 10, 12, 0.85);
             
-            /* 💎 Gold Refractive Edge for Dark Mode */
             --bevel-color: rgba(212, 175, 55, 0.45);
             
             --subtext-color: #AAA;
             --table-label-color: #999;
-            --orb-1: rgba(40, 100, 255, 0.25); 
-            --orb-2: rgba(212, 175, 55, 0.15); 
         }
         
         html, body { overscroll-behavior-y: none; -webkit-tap-highlight-color: transparent; }
@@ -67,21 +59,14 @@
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: var(--gold-accent); border-radius: 10px; }
 
-        .ambient-background {
+        /* 🌊 LIVE AMBIENT LIQUID CANVAS */
+        #bg-canvas {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: 1; overflow: hidden; pointer-events: none;
-        }
-        .orb {
-            position: absolute; border-radius: 50%; filter: blur(70px);
-            animation: floatOrb 15s infinite alternate ease-in-out;
-            transition: background 0.8s ease;
-        }
-        .orb-1 { width: 400px; height: 400px; background: var(--orb-1); top: -100px; left: -100px; }
-        .orb-2 { width: 450px; height: 450px; background: var(--orb-2); bottom: 5%; right: -150px; animation-delay: -5s; }
-        
-        @keyframes floatOrb {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(60px, 120px) scale(1.1); }
+            z-index: 1; pointer-events: none;
+            /* Hardware-accelerated blur melts the orbs together */
+            filter: blur(80px);
+            transform: translate3d(0, 0, 0); 
+            opacity: 0.9;
         }
 
         .header-image, .container, .bottom-nav, .theme-toggle, .footer { position: relative; z-index: 10; }
@@ -107,10 +92,7 @@
         .theme-toggle {
             position: fixed; bottom: 100px; right: 25px;
             background: var(--glass-bg); border: 1px solid var(--glass-border);
-            
-            /* Static Refractive Edge for Buttons */
             box-shadow: inset 0 1px 1px var(--bevel-color), var(--glass-shadow);
-            
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border-radius: 50%; width: 55px; height: 55px; display: flex; justify-content: center; 
             align-items: center; cursor: pointer; transition: all 0.3s ease;
@@ -143,7 +125,6 @@
         }
         .search-box:focus { border-color: var(--gold-accent); box-shadow: inset 0 1px 2px var(--bevel-color), 0 0 20px rgba(212, 175, 55, 0.3); }
 
-        /* 💎 DYNAMIC REFRACTIVE GUEST CARDS */
         .result-item {
             --bevel-x: 0px;
             --bevel-y: 1px;
@@ -152,11 +133,8 @@
             padding: 18px 20px; margin-top: 15px; border-radius: 16px; display: flex;
             justify-content: space-between; align-items: center; cursor: pointer;
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            
-            /* Inset shadow creates the metallic edge, moving via variables */
             box-shadow: inset var(--bevel-x) var(--bevel-y) 1px var(--bevel-color), var(--glass-shadow);
-            text-align: left;
-            transition: transform 0.1s ease-out, box-shadow 0.1s ease-out;
+            text-align: left; transition: transform 0.1s ease-out, box-shadow 0.1s ease-out;
             transform-style: preserve-3d;
         }
 
@@ -237,10 +215,8 @@
 </head>
 <body class="splash-active">
 
-    <div class="ambient-background">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-    </div>
+    <!-- The Liquid Lightscape Canvas -->
+    <canvas id="bg-canvas"></canvas>
 
     <div id="golden-wipe"></div>
 
@@ -268,7 +244,7 @@
                 <div class="takeover-welcome">Welcome to our celebration,</div>
                 <div id="takeover-guest-name" class="takeover-highlight">Guest</div>
                 <div class="takeover-card">
-                    <div class="takeover-label">Your Assigned Table</div>
+                    <div class="takeover-label">Your Assigned Seat</div>
                     <div id="takeover-table-number" class="takeover-number">1</div>
                     <button class="tablemates-btn" onclick="toggleTablemates()">
                         <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
@@ -314,6 +290,71 @@
     </nav>
 
     <script>
+        // 🌊 THE FIXED LIQUID DRIFT ENGINE 🌊
+        const bgCanvas = document.getElementById('bg-canvas');
+        const bgCtx = bgCanvas.getContext('2d');
+        let bgWidth, bgHeight;
+        let lastWidth = window.innerWidth;
+
+        // Creating 3 independent fluid orbs with custom colors for light/dark modes
+        const blobs = [
+            { x: 0, y: 0, vx: 0.3, vy: 0.4, r: 0, light: 'rgba(212, 175, 55, 0.45)', dark: 'rgba(40, 100, 255, 0.45)' },
+            { x: 0, y: 0, vx: -0.4, vy: 0.3, r: 0, light: 'rgba(158, 27, 34, 0.35)', dark: 'rgba(212, 175, 55, 0.25)' },
+            { x: 0, y: 0, vx: 0.2, vy: -0.5, r: 0, light: 'rgba(253, 251, 247, 0.5)', dark: 'rgba(20, 20, 40, 0.5)' }
+        ];
+
+        function initBg() {
+            // Only trigger a full reset if the phone is physically rotated (width changes)
+            if (window.innerWidth !== lastWidth || bgWidth === undefined) {
+                bgWidth = window.innerWidth;
+                bgHeight = window.innerHeight;
+                bgCanvas.width = bgWidth;
+                bgCanvas.height = bgHeight;
+                
+                blobs[0].r = bgWidth * 0.6;
+                blobs[0].x = bgWidth * 0.3; blobs[0].y = bgHeight * 0.3;
+                
+                blobs[1].r = bgWidth * 0.5;
+                blobs[1].x = bgWidth * 0.7; blobs[1].y = bgHeight * 0.7;
+                
+                blobs[2].r = bgWidth * 0.4;
+                blobs[2].x = bgWidth * 0.5; blobs[2].y = bgHeight * 0.5;
+
+                lastWidth = window.innerWidth;
+            } else {
+                // If it's just the URL bar moving, only update the height boundary
+                // but DO NOT teleport the orbs back to the start!
+                bgHeight = window.innerHeight;
+                bgCanvas.height = bgHeight;
+            }
+        }
+
+        window.addEventListener('resize', initBg);
+        initBg();
+
+        function drawBg() {
+            bgCtx.clearRect(0, 0, bgWidth, bgHeight);
+            const isDark = document.body.classList.contains('dark-mode');
+
+            blobs.forEach(b => {
+                b.x += b.vx; b.y += b.vy;
+                // Soft boundary bouncing
+                if (b.x < -b.r) b.vx = Math.abs(b.vx);
+                if (b.x > bgWidth + b.r) b.vx = -Math.abs(b.vx);
+                if (b.y < -b.r) b.vy = Math.abs(b.vy);
+                if (b.y > bgHeight + b.r) b.vy = -Math.abs(b.vy);
+
+                bgCtx.beginPath();
+                bgCtx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+                bgCtx.fillStyle = isDark ? b.dark : b.light;
+                bgCtx.fill();
+            });
+            requestAnimationFrame(drawBg);
+        }
+        drawBg(); // Start the liquid loop
+
+        // === ALL EXISTING CORE LOGIC REMAINS UNTOUCHED ===
+
         const guests = [{"Table": 1, "Name": "Azad"}, {"Table": 1, "Name": "Azweem"}, {"Table": 1, "Name": "Fazeela"}, {"Table": 1, "Name": "Fazie"}, {"Table": 1, "Name": "Grandma"}, {"Table": 1, "Name": "Grandpa"}, {"Table": 1, "Name": "Grandpa Hakeek"}, {"Table": 1, "Name": "Shelly"}, {"Table": 2, "Name": "Alec"}, {"Table": 2, "Name": "Alisha"}, {"Table": 2, "Name": "Eric"}, {"Table": 2, "Name": "Natasha"}, {"Table": 2, "Name": "Riyad"}, {"Table": 2, "Name": "Sahil"}, {"Table": 2, "Name": "Sayid"}, {"Table": 2, "Name": "Shiraz"}, {"Table": 3, "Name": "Ahmed"}, {"Table": 3, "Name": "Bilal"}, {"Table": 3, "Name": "Brianna"}, {"Table": 3, "Name": "Maurice"}, {"Table": 3, "Name": "Nabeela"}, {"Table": 3, "Name": "Shaneeza"}, {"Table": 3, "Name": "Shonique"}, {"Table": 3, "Name": "Simone"}, {"Table": 4, "Name": "Aneisa tentative"}, {"Table": 4, "Name": "Arif"}, {"Table": 4, "Name": "Ayube"}, {"Table": 4, "Name": "Feroz"}, {"Table": 4, "Name": "Golin"}, {"Table": 4, "Name": "Lisa"}, {"Table": 4, "Name": "Ramzan"}, {"Table": 4, "Name": "Sharmila"}, {"Table": 4, "Name": "Zalo"}, {"Table": 5, "Name": "Alishba"}, {"Table": 5, "Name": "Ayaz"}, {"Table": 5, "Name": "Ayaz wife"}, {"Table": 5, "Name": "Fuzail"}, {"Table": 5, "Name": "Irana"}, {"Table": 5, "Name": "Ishaan"}, {"Table": 5, "Name": "Ismail"}, {"Table": 5, "Name": "Mohammed"}, {"Table": 6, "Name": "Christy"}, {"Table": 6, "Name": "Jamila Azees"}, {"Table": 6, "Name": "Omar"}, {"Table": 6, "Name": "Raymond"}, {"Table": 6, "Name": "Shaimoon"}, {"Table": 6, "Name": "Sheriff"}, {"Table": 6, "Name": "Zarina"}, {"Table": 6, "Name": "Zayn"}, {"Table": 7, "Name": "Bibi"}, {"Table": 7, "Name": "Khadija"}, {"Table": 7, "Name": "Nazareen"}, {"Table": 7, "Name": "Nazereen huzz"}, {"Table": 7, "Name": "Raheem"}, {"Table": 7, "Name": "Rubeena"}, {"Table": 7, "Name": "Rubeena Huzz"}, {"Table": 8, "Name": "Fameeda huzz"}, {"Table": 8, "Name": "Fameeda kid"}, {"Table": 8, "Name": "Fazal Khan"}, {"Table": 8, "Name": "Zalena Khan"}, {"Table": 8, "Name": "Zur huzz"}, {"Table": 8, "Name": "Zur kid 1"}, {"Table": 8, "Name": "Zur kid 2"}, {"Table": 9, "Name": "Amar"}, {"Table": 9, "Name": "Amo"}, {"Table": 9, "Name": "Amo wife"}, {"Table": 9, "Name": "Fuzia"}, {"Table": 9, "Name": "Kalam"}, {"Table": 9, "Name": "Kameela"}, {"Table": 9, "Name": "Sharifa"}, {"Table": 10, "Name": "Carol"}, {"Table": 10, "Name": "Charles"}, {"Table": 10, "Name": "Doreen"}, {"Table": 10, "Name": "Eina"}, {"Table": 10, "Name": "Fiza"}, {"Table": 10, "Name": "Rampal"}, {"Table": 10, "Name": "Ravi"}, {"Table": 10, "Name": "Zaid"}, {"Table": 11, "Name": "Alyssa"}, {"Table": 11, "Name": "Amani"}, {"Table": 11, "Name": "Farisha"}, {"Table": 11, "Name": "Fazil"}, {"Table": 11, "Name": "Hafeez"}, {"Table": 11, "Name": "Jason"}, {"Table": 11, "Name": "Krishna"}, {"Table": 11, "Name": "Sally"}, {"Table": 12, "Name": "Aaliyah"}, {"Table": 12, "Name": "Haleema"}, {"Table": 12, "Name": "Iris"}, {"Table": 12, "Name": "Kayden"}, {"Table": 12, "Name": "Munir"}, {"Table": 12, "Name": "Rozeena"}, {"Table": 12, "Name": "Sheriff"}, {"Table": 12, "Name": "Zeena"}, {"Table": 13, "Name": "Imran"}, {"Table": 13, "Name": "Imran wife"}, {"Table": 13, "Name": "Leah"}, {"Table": 13, "Name": "Riyaz"}, {"Table": 13, "Name": "Riyaz wife"}, {"Table": 13, "Name": "Safraz"}, {"Table": 13, "Name": "Safraz kid 1"}, {"Table": 13, "Name": "Safraz kid 2"}, {"Table": 13, "Name": "Safraz kid 3"}, {"Table": 13, "Name": "Safraz kid 4"}, {"Table": 14, "Name": "Amir"}, {"Table": 14, "Name": "Andre"}, {"Table": 14, "Name": "Samirah"}, {"Table": 14, "Name": "Shaleinie"}, {"Table": 14, "Name": "Shalenie daughter"}, {"Table": 14, "Name": "Sharon"}, {"Table": 14, "Name": "Shazaad tentative"}, {"Table": 14, "Name": "Shazaad wife tentative"}, {"Table": 14, "Name": "Zaheera"}, {"Table": 15, "Name": "Azad (Moses)"}, {"Table": 15, "Name": "Farouq"}, {"Table": 15, "Name": "Farouq wife"}, {"Table": 15, "Name": "Rubeena"}, {"Table": 15, "Name": "Sabrina"}, {"Table": 15, "Name": "Sally Subadar"}, {"Table": 15, "Name": "Shafiq"}, {"Table": 15, "Name": "Shenny"}, {"Table": 15, "Name": "Shenny huzz"}, {"Table": 16, "Name": "Brad"}, {"Table": 16, "Name": "Bucky"}, {"Table": 16, "Name": "Curly"}, {"Table": 16, "Name": "James"}, {"Table": 16, "Name": "Meena"}, {"Table": 16, "Name": "Walis"}, {"Table": 16, "Name": "Zalina"}, {"Table": 17, "Name": "Abhi"}, {"Table": 17, "Name": "Fareeda tentative"}, {"Table": 17, "Name": "Inshaan"}, {"Table": 17, "Name": "Marsha"}, {"Table": 17, "Name": "Nazeema"}, {"Table": 17, "Name": "Rozie"}, {"Table": 18, "Name": "Adrian"}, {"Table": 18, "Name": "Carise"}, {"Table": 18, "Name": "Gabriele"}, {"Table": 18, "Name": "Isaac"}, {"Table": 18, "Name": "Jebesha"}, {"Table": 18, "Name": "Lubna"}, {"Table": 18, "Name": "Mashood"}, {"Table": 18, "Name": "Reeta"}, {"Table": 18, "Name": "Ridwan"}, {"Table": 18, "Name": "Varsh"}];
 
         let currentActiveGuest = ""; let currentActiveTable = null;
@@ -382,18 +423,15 @@
             resultsDiv.innerHTML = html;
         }
 
-        // 💎 Dynamic Refractive Lighting (Desktop)
         function handleMouseParallax(e, el) {
             const rect = el.getBoundingClientRect();
             const x = e.clientX - rect.left; 
             const y = e.clientY - rect.top;
             const centerX = rect.width / 2; const centerY = rect.height / 2;
             
-            // Calculate 3D Tilt
             const rotateX = ((y - centerY) / centerY) * -12; 
             const rotateY = ((x - centerX) / centerX) * 12;
             
-            // Calculate Shifting Bevel Highlight
             const lightX = ((centerX - x) / centerX) * 3; 
             const lightY = ((centerY - y) / centerY) * 3;
             
@@ -402,7 +440,6 @@
             el.style.setProperty('--bevel-y', `${lightY}px`);
         }
 
-        // 💎 Dynamic Refractive Lighting (Mobile)
         function handleTouchParallax(e, el) {
             const touch = e.touches[0];
             const rect = el.getBoundingClientRect();
@@ -480,16 +517,16 @@
             window.scrollTo(0, 0);
         }
 
-        const canvas = document.getElementById('celebration-canvas');
-        const ctx = canvas.getContext('2d');
+        const canvasEvent = document.getElementById('celebration-canvas');
+        const ctxEvent = canvasEvent.getContext('2d');
         let particles = []; let animationFrameId;
 
-        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        function resizeCanvas() { canvasEvent.width = window.innerWidth; canvasEvent.height = window.innerHeight; }
         window.addEventListener('resize', resizeCanvas); resizeCanvas();
 
         function startCelebrationAnimation() {
             particles = [];
-            const centerX = canvas.width / 2; const centerY = canvas.height / 2;
+            const centerX = canvasEvent.width / 2; const centerY = canvasEvent.height / 2;
             for (let i = 0; i < 75; i++) {
                 particles.push({
                     x: centerX, y: centerY, angle: Math.random() * Math.PI * 2,
@@ -503,21 +540,21 @@
         }
 
         function runAnimationLoop() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctxEvent.clearRect(0, 0, canvasEvent.width, canvasEvent.height);
             let alive = false;
             particles.forEach(p => {
                 if (p.opacity > 0) {
                     alive = true;
                     p.x += Math.cos(p.angle) * p.speed; p.y += Math.sin(p.angle) * p.speed + p.gravity;
                     p.opacity -= 0.015; p.rotation += p.rotationSpeed;
-                    ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rotation);
-                    ctx.globalAlpha = p.opacity; ctx.fillStyle = p.color;
-                    ctx.beginPath(); ctx.ellipse(0, 0, p.radius, p.radius * 0.6, 0, 0, Math.PI * 2);
-                    ctx.fill(); ctx.restore();
+                    ctxEvent.save(); ctxEvent.translate(p.x, p.y); ctxEvent.rotate(p.rotation);
+                    ctxEvent.globalAlpha = p.opacity; ctxEvent.fillStyle = p.color;
+                    ctxEvent.beginPath(); ctxEvent.ellipse(0, 0, p.radius, p.radius * 0.6, 0, 0, Math.PI * 2);
+                    ctxEvent.fill(); ctxEvent.restore();
                 }
             });
             if (alive) animationFrameId = requestAnimationFrame(runAnimationLoop);
-            else ctx.clearRect(0, 0, canvas.width, canvas.height);
+            else ctxEvent.clearRect(0, 0, canvasEvent.width, canvasEvent.height);
         }
 
         const themeToggle = document.getElementById('darkModeToggle');
