@@ -63,7 +63,6 @@
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: var(--gold-accent); border-radius: 10px; }
 
-        /* 🌊 LIVE AMBIENT LIQUID CANVAS */
         #bg-canvas {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             z-index: 1; pointer-events: none; filter: blur(80px);
@@ -71,6 +70,17 @@
         }
 
         .header-image, .container, .bottom-nav, .theme-toggle, .footer { position: relative; z-index: 10; }
+
+        /* Dynamic Image Filtering for Dark Mode */
+        .header-image { 
+            width: 100%; max-width: 800px; height: auto; 
+            border-bottom: 3px solid var(--accent-color); 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
+            transition: filter 0.8s ease;
+        }
+        body.dark-mode .header-image {
+            filter: brightness(0.75) contrast(1.1); /* Dims the image dynamically for now */
+        }
 
         #golden-wipe {
             position: fixed; bottom: 0; left: 0; width: 100vw; height: 0;
@@ -103,7 +113,6 @@
 
         #celebration-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 8999; }
 
-        .header-image { width: 100%; max-width: 800px; height: auto; border-bottom: 3px solid var(--accent-color); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); }
         .container { width: 90%; max-width: 600px; text-align: center; padding: 20px 0; }
 
         .tab-content { display: none; width: 100%; }
@@ -212,26 +221,33 @@
         .action-btn.primary { background: var(--gold-accent); color: white; }
         .action-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212,175,55,0.3); }
 
-        /* TIMELINE WITH LIVE SLIDING TRACKER */
-        .timeline { position: relative; max-width: 500px; margin: 30px auto; padding-left: 30px; text-align: left; }
-        .timeline::before { content: ''; position: absolute; left: 9px; top: 5px; bottom: 5px; width: 2px; background-color: var(--glass-border); }
+        /* 📍 PERFECTLY CENTERED TIMELINE WITH LIVE SLIDING TRACKER */
+        .timeline { position: relative; max-width: 500px; margin: 30px auto; padding-left: 40px; text-align: left; }
+        
+        /* The vertical line is placed exactly 19px from the left, making its true center 20px */
+        .timeline::before { content: ''; position: absolute; left: 19px; top: 5px; bottom: 5px; width: 2px; background-color: var(--glass-border); }
+        
         .timeline-item { position: relative; margin-bottom: 35px; transition: all 0.4s ease; }
-        .timeline-node { position: absolute; left: -26px; top: 4px; width: 12px; height: 12px; border-radius: 50%; background-color: var(--glass-border); border: 4px solid var(--bg-color); transition: all 0.4s ease; }
+        
+        /* The static white nodes are 20px wide total (12 width + 8 border). Placed at -30px relative to the item. 
+           This calculates exactly to a true center of 20px, aligning flawlessly with the line. */
+        .timeline-node { position: absolute; left: -30px; top: 4px; width: 12px; height: 12px; border-radius: 50%; background-color: var(--glass-border); border: 4px solid var(--bg-color); transition: all 0.4s ease; z-index: 2;}
+        
         .timeline-content { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 18px; border-radius: 16px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: inset 0 1px 1px var(--bevel-color), var(--glass-shadow); transition: all 0.4s ease; }
         .timeline-time { font-size: 0.85rem; color: var(--gold-accent); font-weight: bold; letter-spacing: 1px; font-family: 'Lato', sans-serif;}
         .timeline-title { font-size: 1.2rem; margin: 4px 0; font-weight: 700; color: var(--text-color); font-family: 'Cinzel', serif;}
         .timeline-desc { font-size: 0.95rem; color: var(--subtext-color); margin: 0; font-style: italic; }
-        .timeline-item.active .timeline-node { background-color: var(--gold-accent); transform: scale(1.3); box-shadow: 0 0 12px var(--gold-accent); }
+        
+        /* Removed the static active gold ring class to prevent the double-dot issue */
         .timeline-item.active .timeline-content { border-color: var(--gold-accent); box-shadow: inset 0 1px 1px var(--bevel-color), 0 8px 25px rgba(212, 175, 55, 0.25); transform: translateX(6px); }
         
-        /* The Live Sliding Gold Dot */
+        /* The Live Sliding Gold Dot - Math calculated to cover the white dots exactly */
         #live-time-tracker {
-            position: absolute; left: 4px; width: 12px; height: 12px; border-radius: 50%;
-            background-color: var(--gold-accent); border: 2px solid #fff;
+            position: absolute; left: 8px; width: 16px; height: 16px; border-radius: 50%;
+            background-color: var(--gold-accent); border: 4px solid var(--bg-color);
             box-shadow: 0 0 15px 4px var(--gold-accent); z-index: 5;
-            transition: top 2s ease-out; display: none;
+            transition: top 1s linear; display: none;
         }
-        body.dark-mode #live-time-tracker { border-color: var(--bg-color); }
 
         /* DETAILS TAB & COUNTDOWN */
         .countdown-container { display: flex; justify-content: center; gap: 15px; margin: 25px 0; }
@@ -281,11 +297,12 @@
     <div id="splash-screen"><h1>Y & N</h1></div>
     <canvas id="celebration-canvas"></canvas>
 
-    <img src="banner.jpg" alt="Walima Banner" class="header-image" onerror="this.style.display='none'">
+    <!-- Main Banner Element -->
+    <img id="dynamic-banner" src="banner.jpg" alt="Walima Banner" class="header-image" onerror="this.style.display='none'">
 
     <div class="container">
         <div class="bismillah">In the name of Allah, The Most Beneficent, The Most Merciful</div>
-        <h1 style="font-size: 2.3rem; margin-bottom: 5px; text-align: center;">Yousuf & Nafeesa's</h1>
+        <h1 style="font-size: 2.3rem; margin-bottom: 5px; text-align: center;">Yousuf & Nafeesa</h1>
         
         <!-- 🔍 TAB 1: SEATING -->
         <div id="seating-tab" class="tab-content active">
@@ -416,7 +433,6 @@
         let bgWidth, bgHeight;
         let lastWidth = window.innerWidth;
 
-        // Speeds increased by 50%
         const blobs = [
             { x: 0, y: 0, vx: 0.45, vy: 0.6, r: 0, light: 'rgba(212, 175, 55, 0.45)', dark: 'rgba(40, 100, 255, 0.45)' },
             { x: 0, y: 0, vx: -0.6, vy: 0.45, r: 0, light: 'rgba(158, 27, 34, 0.35)', dark: 'rgba(212, 175, 55, 0.25)' },
@@ -442,13 +458,10 @@
             const isDark = document.body.classList.contains('dark-mode');
             blobs.forEach(b => {
                 b.x += b.vx; b.y += b.vy;
-                
-                // Fixed Boundary Logic: Center hits the wall to prevent going out of bounds
                 if (b.x < 0) b.vx = Math.abs(b.vx); 
                 if (b.x > bgWidth) b.vx = -Math.abs(b.vx);
                 if (b.y < 0) b.vy = Math.abs(b.vy); 
                 if (b.y > bgHeight) b.vy = -Math.abs(b.vy);
-                
                 bgCtx.beginPath(); bgCtx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
                 bgCtx.fillStyle = isDark ? b.dark : b.light; bgCtx.fill();
             });
@@ -482,7 +495,6 @@
 
         let currentActiveGuest = ""; let currentActiveTable = null;
 
-        // SAFEST WAY TO LAUNCH: Do not wait for 404 images to load.
         function initApp() {
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
@@ -491,9 +503,7 @@
                 document.body.classList.remove('splash-active');
                 updateTimelineHighlight(); 
                 initCountdown();
-                
-                // Keep the live sliding tracker updated every minute
-                setInterval(updateTimelineHighlight, 60000); 
+                setInterval(updateTimelineHighlight, 1000); // Check every second for butter-smooth sliding
             }, 1200); 
         }
 
@@ -515,7 +525,7 @@
             if (tabId === 'schedule-tab') updateTimelineHighlight();
         }
 
-        // 📍 THE LIVE SLIDING GOLD DOT LOGIC 
+        // 📍 THE LIVE SLIDING GOLD DOT LOGIC
         function updateTimelineHighlight() {
             const now = new Date();
             const currentMinutes = now.getHours() * 60 + now.getMinutes();
@@ -540,7 +550,6 @@
                     item.classList.add('active');
                     isEventActive = true;
 
-                    // Only calculate positioning if the element is actually visible on screen
                     if (item.offsetParent !== null) {
                         const duration = endMins - startMins;
                         const elapsed = currentMinutes - startMins;
@@ -550,7 +559,7 @@
                         const nextItem = items[index + 1];
                         const spaceToNext = nextItem ? (nextItem.offsetTop - itemTop) : item.offsetHeight;
 
-                        const dotY = itemTop + 4 + (spaceToNext * percentage);
+                        const dotY = itemTop + 2 + (spaceToNext * percentage);
                         tracker.style.top = dotY + 'px';
                         tracker.style.display = 'block';
                     }
@@ -704,7 +713,6 @@
 
         // ⏳ STRICT EDT COUNTDOWN TIMER
         function initCountdown() {
-            // Using precise ISO 8601 formatting with a strict UTC-4 offset for EDT
             const targetDate = new Date('2026-06-27T18:00:00-04:00').getTime();
             
             setInterval(() => {
@@ -769,6 +777,18 @@
         }
 
         const themeToggle = document.getElementById('darkModeToggle');
+        const bannerImg = document.getElementById('dynamic-banner');
+        
+        // Ensure image URL handles dark mode swapping if they add banner-dark.jpg later
+        function updateBannerImage() {
+            if (document.body.classList.contains('dark-mode')) {
+                // To activate a custom dark mode image, uncomment the next line:
+                // bannerImg.src = 'banner-dark.jpg';
+            } else {
+                bannerImg.src = 'banner.jpg';
+            }
+        }
+
         const themeIcon = document.getElementById('theme-icon');
         const moonSvg = '<path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-3.03 0-5.5-2.47-5.5-5.5 0-1.82.89-3.42 2.26-4.4C12.92 3.04 12.46 3 12 3z"/>';
         const sunSvg = '<path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/>';
@@ -777,6 +797,7 @@
             triggerHaptic(); 
             document.body.classList.toggle('dark-mode');
             themeIcon.innerHTML = document.body.classList.contains('dark-mode') ? sunSvg : moonSvg;
+            updateBannerImage();
         });
 
         if ('serviceWorker' in navigator) {
