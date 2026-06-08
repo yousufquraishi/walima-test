@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- ⚡ PRE-LOAD OPTIMIZATIONS ⚡ -->
-    <link rel="preload" href="banner.jpg" as="image">
+    <link rel="preload" href="banner-dark.jpg" as="image">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Great+Vibes&family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -71,15 +70,11 @@
 
         .header-image, .container, .bottom-nav, .theme-toggle, .footer { position: relative; z-index: 10; }
 
-        /* Dynamic Image Filtering for Dark Mode */
         .header-image { 
             width: 100%; max-width: 800px; height: auto; 
             border-bottom: 3px solid var(--accent-color); 
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
             transition: filter 0.8s ease;
-        }
-        body.dark-mode .header-image {
-            filter: brightness(0.75) contrast(1.1);
         }
 
         #golden-wipe {
@@ -258,7 +253,6 @@
         .details-card h3 { color: var(--accent-color); margin-top: 0; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;}
         .details-card p { color: var(--subtext-color); line-height: 1.6; margin: 0 0 10px 0; }
         
-        /* Etiquette List Styling */
         .etiquette-list { color: var(--subtext-color); line-height: 1.6; padding-left: 20px; margin: 0; }
         .etiquette-list li { margin-bottom: 12px; }
         .etiquette-list strong { color: var(--text-color); font-weight: 700; }
@@ -284,23 +278,20 @@
         .footer-time { color: var(--gold-accent); font-family: 'Lato', sans-serif; text-transform: none; font-size: 0.9rem; margin-top: 5px; display: block; font-weight: 400; font-style: italic;}
     </style>
 </head>
-<!-- ⚡ ADDED DARK MODE CLASS DIRECTLY TO BODY FOR INSTANT ACTIVATION ⚡ -->
 <body class="splash-active dark-mode">
 
-    <!-- The Liquid Lightscape Canvas -->
     <canvas id="bg-canvas"></canvas>
 
     <div id="golden-wipe"></div>
     <div id="splash-screen"><h1>Y & N</h1></div>
     <canvas id="celebration-canvas"></canvas>
 
-    <img id="dynamic-banner" src="banner.jpg" alt="Walima Banner" class="header-image" onerror="this.style.display='none'">
+    <img id="dynamic-banner" src="banner-dark.jpg" alt="Walima Banner" class="header-image" onerror="this.src='banner.jpg'">
 
     <div class="container">
         <div class="bismillah">In the name of Allah, The Most Beneficent, The Most Merciful</div>
         <h1 style="font-size: 2.3rem; margin-bottom: 5px; text-align: center;">Yousuf & Nafeesa's</h1>
         
-        <!-- 🔍 TAB 1: SEATING -->
         <div id="seating-tab" class="tab-content active">
             <h2>Walima Seating</h2>
             <div id="search-interface">
@@ -353,7 +344,6 @@
             </div>
         </div>
 
-        <!-- 📅 TAB 2: SCHEDULE -->
         <div id="schedule-tab" class="tab-content">
             <h2>Evening Itinerary</h2>
             <div class="timeline">
@@ -365,7 +355,6 @@
             </div>
         </div>
 
-        <!-- ℹ️ TAB 3: DETAILS -->
         <div id="details-tab" class="tab-content">
             <h2>Event Details</h2>
             
@@ -375,7 +364,6 @@
                 <div class="countdown-box"><span class="cd-number" id="cd-mins">00</span><span class="cd-label">Mins</span></div>
             </div>
 
-            <!-- NEW ETIQUETTE CARD -->
             <div class="details-card">
                 <h3>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>
@@ -418,7 +406,6 @@
     </div>
 
     <button id="darkModeToggle" class="theme-toggle" aria-label="Toggle Theme">
-        <!-- Defaulted to the Sun icon because Dark Mode is default -->
         <svg id="theme-icon" viewBox="0 0 24 24"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg>
     </button>
 
@@ -611,7 +598,7 @@
                             <span class="guest-name">${data.cleanName}</span>
                             ${data.isTentative ? '<span class="badge-tentative">Tentative</span>' : ''}
                         </div>
-                        <span class="select-arrow">Select &rarr;</span>
+                        <span class="select-arrow">Select →</span>
                     </div>
                 `;
             });
@@ -792,8 +779,7 @@
         
         function updateBannerImage() {
             if (document.body.classList.contains('dark-mode')) {
-                // To activate a custom dark mode image, uncomment the next line:
-                // bannerImg.src = 'banner-dark.jpg';
+                bannerImg.src = 'banner-dark.jpg';
             } else {
                 bannerImg.src = 'banner.jpg';
             }
