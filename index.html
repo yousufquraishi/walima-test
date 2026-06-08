@@ -79,7 +79,7 @@
             transition: filter 0.8s ease;
         }
         body.dark-mode .header-image {
-            filter: brightness(0.75) contrast(1.1); /* Dims the image dynamically for now */
+            filter: brightness(0.75) contrast(1.1);
         }
 
         #golden-wipe {
@@ -221,27 +221,18 @@
         .action-btn.primary { background: var(--gold-accent); color: white; }
         .action-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212,175,55,0.3); }
 
-        /* 📍 PERFECTLY CENTERED TIMELINE WITH LIVE SLIDING TRACKER */
+        /* TIMELINE WITH LIVE SLIDING TRACKER */
         .timeline { position: relative; max-width: 500px; margin: 30px auto; padding-left: 40px; text-align: left; }
-        
-        /* The vertical line is placed exactly 19px from the left, making its true center 20px */
         .timeline::before { content: ''; position: absolute; left: 19px; top: 5px; bottom: 5px; width: 2px; background-color: var(--glass-border); }
-        
         .timeline-item { position: relative; margin-bottom: 35px; transition: all 0.4s ease; }
-        
-        /* The static white nodes are 20px wide total (12 width + 8 border). Placed at -30px relative to the item. 
-           This calculates exactly to a true center of 20px, aligning flawlessly with the line. */
         .timeline-node { position: absolute; left: -30px; top: 4px; width: 12px; height: 12px; border-radius: 50%; background-color: var(--glass-border); border: 4px solid var(--bg-color); transition: all 0.4s ease; z-index: 2;}
         
         .timeline-content { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 18px; border-radius: 16px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: inset 0 1px 1px var(--bevel-color), var(--glass-shadow); transition: all 0.4s ease; }
         .timeline-time { font-size: 0.85rem; color: var(--gold-accent); font-weight: bold; letter-spacing: 1px; font-family: 'Lato', sans-serif;}
         .timeline-title { font-size: 1.2rem; margin: 4px 0; font-weight: 700; color: var(--text-color); font-family: 'Cinzel', serif;}
         .timeline-desc { font-size: 0.95rem; color: var(--subtext-color); margin: 0; font-style: italic; }
-        
-        /* Removed the static active gold ring class to prevent the double-dot issue */
         .timeline-item.active .timeline-content { border-color: var(--gold-accent); box-shadow: inset 0 1px 1px var(--bevel-color), 0 8px 25px rgba(212, 175, 55, 0.25); transform: translateX(6px); }
         
-        /* The Live Sliding Gold Dot - Math calculated to cover the white dots exactly */
         #live-time-tracker {
             position: absolute; left: 8px; width: 16px; height: 16px; border-radius: 50%;
             background-color: var(--gold-accent); border: 4px solid var(--bg-color);
@@ -267,6 +258,11 @@
         .details-card h3 { color: var(--accent-color); margin-top: 0; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;}
         .details-card p { color: var(--subtext-color); line-height: 1.6; margin: 0 0 10px 0; }
         
+        /* Etiquette List Styling */
+        .etiquette-list { color: var(--subtext-color); line-height: 1.6; padding-left: 20px; margin: 0; }
+        .etiquette-list li { margin-bottom: 12px; }
+        .etiquette-list strong { color: var(--text-color); font-weight: 700; }
+
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 80px;
             background: var(--nav-bg); border-top: 1px solid var(--glass-border);
@@ -288,7 +284,8 @@
         .footer-time { color: var(--gold-accent); font-family: 'Lato', sans-serif; text-transform: none; font-size: 0.9rem; margin-top: 5px; display: block; font-weight: 400; font-style: italic;}
     </style>
 </head>
-<body class="splash-active">
+<!-- ⚡ ADDED DARK MODE CLASS DIRECTLY TO BODY FOR INSTANT ACTIVATION ⚡ -->
+<body class="splash-active dark-mode">
 
     <!-- The Liquid Lightscape Canvas -->
     <canvas id="bg-canvas"></canvas>
@@ -297,12 +294,11 @@
     <div id="splash-screen"><h1>Y & N</h1></div>
     <canvas id="celebration-canvas"></canvas>
 
-    <!-- Main Banner Element -->
     <img id="dynamic-banner" src="banner.jpg" alt="Walima Banner" class="header-image" onerror="this.style.display='none'">
 
     <div class="container">
         <div class="bismillah">In the name of Allah, The Most Beneficent, The Most Merciful</div>
-        <h1 style="font-size: 2.3rem; margin-bottom: 5px; text-align: center;">Yousuf & Nafeesa's</h1>
+        <h1 style="font-size: 2.3rem; margin-bottom: 5px; text-align: center;">Yousuf & Nafeesa</h1>
         
         <!-- 🔍 TAB 1: SEATING -->
         <div id="seating-tab" class="tab-content active">
@@ -379,6 +375,20 @@
                 <div class="countdown-box"><span class="cd-number" id="cd-mins">00</span><span class="cd-label">Mins</span></div>
             </div>
 
+            <!-- NEW ETIQUETTE CARD -->
+            <div class="details-card">
+                <h3>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>
+                    House Rules & Etiquette
+                </h3>
+                <ul class="etiquette-list">
+                    <li><strong>Unplugged Moments:</strong> Please turn off all camera flashes to maintain the hall's ambiance.</li>
+                    <li><strong>Media Team:</strong> We have hired amazing photographers and videographers. Please remain mindful and avoid stepping in front of their lenses or blocking their shots.</li>
+                    <li><strong>Speeches:</strong> Kindly silence all mobile devices during speeches and formal program segments.</li>
+                    <li><strong>Supervision:</strong> For their safety, please ensure children are seated or supervised by an adult during the dinner service and formalities.</li>
+                </ul>
+            </div>
+
             <div class="details-card">
                 <h3>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
@@ -407,8 +417,9 @@
         June 27, 2026<br><span class="footer-time">Royal Palm Banquet</span>
     </div>
 
-    <button id="darkModeToggle" class="theme-toggle" aria-label="Toggle Evening Mode">
-        <svg id="theme-icon" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-3.03 0-5.5-2.47-5.5-5.5 0-1.82.89-3.42 2.26-4.4C12.92 3.04 12.46 3 12 3z"/></svg>
+    <button id="darkModeToggle" class="theme-toggle" aria-label="Toggle Theme">
+        <!-- Defaulted to the Sun icon because Dark Mode is default -->
+        <svg id="theme-icon" viewBox="0 0 24 24"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg>
     </button>
 
     <nav class="bottom-nav">
@@ -503,7 +514,7 @@
                 document.body.classList.remove('splash-active');
                 updateTimelineHighlight(); 
                 initCountdown();
-                setInterval(updateTimelineHighlight, 1000); // Check every second for butter-smooth sliding
+                setInterval(updateTimelineHighlight, 1000); 
             }, 1200); 
         }
 
@@ -779,11 +790,10 @@
         const themeToggle = document.getElementById('darkModeToggle');
         const bannerImg = document.getElementById('dynamic-banner');
         
-        // Ensure image URL handles dark mode swapping if they add banner-dark.jpg later
         function updateBannerImage() {
             if (document.body.classList.contains('dark-mode')) {
                 // To activate a custom dark mode image, uncomment the next line:
-                 bannerImg.src = 'banner-dark.jpg';
+                // bannerImg.src = 'banner-dark.jpg';
             } else {
                 bannerImg.src = 'banner.jpg';
             }
