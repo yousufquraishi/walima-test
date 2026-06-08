@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
+    <!-- ⚡ PRE-LOAD OPTIMIZATIONS ⚡ -->
     <link rel="preload" href="banner.jpg" as="image">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -211,7 +212,7 @@
         .action-btn.primary { background: var(--gold-accent); color: white; }
         .action-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212,175,55,0.3); }
 
-        /* TIMELINE WITH LIVE TRACKER */
+        /* TIMELINE WITH LIVE SLIDING TRACKER */
         .timeline { position: relative; max-width: 500px; margin: 30px auto; padding-left: 30px; text-align: left; }
         .timeline::before { content: ''; position: absolute; left: 9px; top: 5px; bottom: 5px; width: 2px; background-color: var(--glass-border); }
         .timeline-item { position: relative; margin-bottom: 35px; transition: all 0.4s ease; }
@@ -273,6 +274,7 @@
 </head>
 <body class="splash-active">
 
+    <!-- The Liquid Lightscape Canvas -->
     <canvas id="bg-canvas"></canvas>
 
     <div id="golden-wipe"></div>
@@ -285,6 +287,7 @@
         <div class="bismillah">In the name of Allah, The Most Beneficent, The Most Merciful</div>
         <h1 style="font-size: 2.3rem; margin-bottom: 5px; text-align: center;">Yousuf & Nafeesa</h1>
         
+        <!-- 🔍 TAB 1: SEATING -->
         <div id="seating-tab" class="tab-content active">
             <h2>Walima Seating</h2>
             <div id="search-interface">
@@ -337,6 +340,7 @@
             </div>
         </div>
 
+        <!-- 📅 TAB 2: SCHEDULE -->
         <div id="schedule-tab" class="tab-content">
             <h2>Evening Itinerary</h2>
             <div class="timeline">
@@ -348,6 +352,7 @@
             </div>
         </div>
 
+        <!-- ℹ️ TAB 3: DETAILS -->
         <div id="details-tab" class="tab-content">
             <h2>Event Details</h2>
             
@@ -477,10 +482,12 @@
 
         let currentActiveGuest = ""; let currentActiveTable = null;
 
-        window.addEventListener('load', () => {
+        // SAFEST WAY TO LAUNCH: Do not wait for 404 images to load.
+        function initApp() {
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
-                splash.style.opacity = '0'; splash.style.visibility = 'hidden';
+                splash.style.opacity = '0'; 
+                splash.style.visibility = 'hidden';
                 document.body.classList.remove('splash-active');
                 updateTimelineHighlight(); 
                 initCountdown();
@@ -488,7 +495,13 @@
                 // Keep the live sliding tracker updated every minute
                 setInterval(updateTimelineHighlight, 60000); 
             }, 1200); 
-        });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
 
         function triggerHaptic() { if (navigator.vibrate) navigator.vibrate(40); }
 
@@ -527,18 +540,20 @@
                     item.classList.add('active');
                     isEventActive = true;
 
-                    // Calculate sliding position exactly down the bar
-                    const duration = endMins - startMins;
-                    const elapsed = currentMinutes - startMins;
-                    const percentage = Math.min(Math.max(elapsed / duration, 0), 1);
+                    // Only calculate positioning if the element is actually visible on screen
+                    if (item.offsetParent !== null) {
+                        const duration = endMins - startMins;
+                        const elapsed = currentMinutes - startMins;
+                        const percentage = Math.min(Math.max(elapsed / duration, 0), 1);
 
-                    const itemTop = item.offsetTop;
-                    const nextItem = items[index + 1];
-                    const spaceToNext = nextItem ? (nextItem.offsetTop - itemTop) : item.offsetHeight;
+                        const itemTop = item.offsetTop;
+                        const nextItem = items[index + 1];
+                        const spaceToNext = nextItem ? (nextItem.offsetTop - itemTop) : item.offsetHeight;
 
-                    const dotY = itemTop + 4 + (spaceToNext * percentage);
-                    tracker.style.top = dotY + 'px';
-                    tracker.style.display = 'block';
+                        const dotY = itemTop + 4 + (spaceToNext * percentage);
+                        tracker.style.top = dotY + 'px';
+                        tracker.style.display = 'block';
+                    }
                 } else {
                     item.classList.remove('active');
                 }
@@ -576,7 +591,7 @@
                             <span class="guest-name">${data.cleanName}</span>
                             ${data.isTentative ? '<span class="badge-tentative">Tentative</span>' : ''}
                         </div>
-                        <span class="select-arrow">Select →</span>
+                        <span class="select-arrow">Select &rarr;</span>
                     </div>
                 `;
             });
@@ -632,4 +647,141 @@
                     if (current >= targetTable) { odometer.innerText = targetTable; clearInterval(counter); }
                     else { odometer.innerText = current; }
                 }, intervalTime);
-            },
+            }, 500);
+        }
+
+        function toggleTablemates() {
+            triggerHaptic();
+            const listDiv = document.getElementById('tablemates-list');
+            if (listDiv.style.display === 'flex') { listDiv.style.display = 'none'; return; }
+            
+            const mates = guests.filter(g => g.Table === currentActiveTable);
+            const filteredMates = mates.filter(m => formatGuestName(m.Name).cleanName !== currentActiveGuest);
+            
+            if (filteredMates.length === 0) {
+                listDiv.innerHTML = "<em style='color:var(--subtext-color);'>You have this table all to yourself!</em>";
+            } else {
+                let chipsHtml = "";
+                filteredMates.forEach(m => {
+                    const data = formatGuestName(m.Name);
+                    chipsHtml += `
+                        <div class="chip">
+                            <div class="chip-avatar">${data.initials}</div>
+                            <span>${data.cleanName}</span>
+                        </div>
+                    `;
+                });
+                listDiv.innerHTML = chipsHtml;
+            }
+            listDiv.style.display = 'flex';
+        }
+
+        function shareTable() {
+            triggerHaptic();
+            const shareText = `I'm at Table ${currentActiveTable} for Yousuf & Nafeesa's Walima! Find your seat here:`;
+            const shareUrl = window.location.href;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Walima Seating',
+                    text: shareText,
+                    url: shareUrl
+                }).catch(console.error);
+            } else {
+                navigator.clipboard.writeText(shareText + " " + shareUrl);
+                alert("Table info copied to clipboard!");
+            }
+        }
+
+        function resetSearch() {
+            triggerHaptic();
+            document.getElementById('searchInput').value = '';
+            document.getElementById('results').innerHTML = '';
+            document.getElementById('takeover-view').style.display = 'none';
+            document.getElementById('search-interface').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        // ⏳ STRICT EDT COUNTDOWN TIMER
+        function initCountdown() {
+            // Using precise ISO 8601 formatting with a strict UTC-4 offset for EDT
+            const targetDate = new Date('2026-06-27T18:00:00-04:00').getTime();
+            
+            setInterval(() => {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+                
+                if(distance < 0) {
+                    document.getElementById('cd-days').innerText = "00";
+                    document.getElementById('cd-hours').innerText = "00";
+                    document.getElementById('cd-mins').innerText = "00";
+                    return;
+                }
+                
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                
+                document.getElementById('cd-days').innerText = days.toString().padStart(2, '0');
+                document.getElementById('cd-hours').innerText = hours.toString().padStart(2, '0');
+                document.getElementById('cd-mins').innerText = minutes.toString().padStart(2, '0');
+            }, 1000);
+        }
+
+        const canvasEvent = document.getElementById('celebration-canvas');
+        const ctxEvent = canvasEvent.getContext('2d');
+        let particles = []; let animationFrameId;
+
+        function resizeCanvas() { canvasEvent.width = window.innerWidth; canvasEvent.height = window.innerHeight; }
+        window.addEventListener('resize', resizeCanvas); resizeCanvas();
+
+        function startCelebrationAnimation() {
+            particles = [];
+            const centerX = canvasEvent.width / 2; const centerY = canvasEvent.height / 2;
+            for (let i = 0; i < 75; i++) {
+                particles.push({
+                    x: centerX, y: centerY, angle: Math.random() * Math.PI * 2,
+                    speed: 3 + Math.random() * 8, radius: 4 + Math.random() * 6,
+                    color: Math.random() > 0.5 ? '#9E1B22' : '#D4AF37',
+                    opacity: 1, rotation: Math.random() * Math.PI,
+                    rotationSpeed: (Math.random() - 0.5) * 0.1, gravity: 0.15
+                });
+            }
+            cancelAnimationFrame(animationFrameId); runAnimationLoop();
+        }
+
+        function runAnimationLoop() {
+            ctxEvent.clearRect(0, 0, canvasEvent.width, canvasEvent.height);
+            let alive = false;
+            particles.forEach(p => {
+                if (p.opacity > 0) {
+                    alive = true;
+                    p.x += Math.cos(p.angle) * p.speed; p.y += Math.sin(p.angle) * p.speed + p.gravity;
+                    p.opacity -= 0.015; p.rotation += p.rotationSpeed;
+                    ctxEvent.save(); ctxEvent.translate(p.x, p.y); ctxEvent.rotate(p.rotation);
+                    ctxEvent.globalAlpha = p.opacity; ctxEvent.fillStyle = p.color;
+                    ctxEvent.beginPath(); ctxEvent.ellipse(0, 0, p.radius, p.radius * 0.6, 0, 0, Math.PI * 2);
+                    ctxEvent.fill(); ctxEvent.restore();
+                }
+            });
+            if (alive) animationFrameId = requestAnimationFrame(runAnimationLoop);
+            else ctxEvent.clearRect(0, 0, canvasEvent.width, canvasEvent.height);
+        }
+
+        const themeToggle = document.getElementById('darkModeToggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const moonSvg = '<path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-3.03 0-5.5-2.47-5.5-5.5 0-1.82.89-3.42 2.26-4.4C12.92 3.04 12.46 3 12 3z"/>';
+        const sunSvg = '<path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/>';
+
+        themeToggle.addEventListener('click', () => {
+            triggerHaptic(); 
+            document.body.classList.toggle('dark-mode');
+            themeIcon.innerHTML = document.body.classList.contains('dark-mode') ? sunSvg : moonSvg;
+        });
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(() => {}); });
+        }
+    </script>
+</body>
+</html>
